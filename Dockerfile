@@ -43,10 +43,6 @@ RUN composer install --optimize-autoloader --no-dev --no-interaction
 RUN chown -R www-data:www-data /var/www/html/writable \
     && chmod -R 775 /var/www/html/writable
 
-# Copy and set entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
@@ -63,8 +59,8 @@ RUN echo '<Directory /var/www/html/public>\n\
     Require all granted\n\
 </Directory>' >> /etc/apache2/sites-available/000-default.conf
 
-# Expose port (Railway will override this with dynamic PORT)
+# Expose port
 EXPOSE 80
 
-# Use custom entrypoint
-ENTRYPOINT ["docker-entrypoint.sh"]
+# Start Apache
+CMD ["apache2-foreground"]
