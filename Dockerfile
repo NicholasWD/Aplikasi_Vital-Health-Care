@@ -60,7 +60,11 @@ RUN echo '<Directory /var/www/html/public>\n\
     Require all granted\n\
 </Directory>' >> /etc/apache2/sites-available/000-default.conf
 
-# Expose port 80
+# Configure Apache to listen on PORT env variable (Railway dynamic port)
+RUN echo 'Listen ${PORT:-80}' > /etc/apache2/ports.conf && \
+    sed -i 's/<VirtualHost \*:80>/<VirtualHost *:${PORT:-80}>/' /etc/apache2/sites-available/000-default.conf
+
+# Expose port (Railway will override this)
 EXPOSE 80
 
 # Use custom entrypoint
