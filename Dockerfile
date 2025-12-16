@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     zip \
     unzip \
+    netcat-openbsd \
     && docker-php-ext-configure intl \
     && docker-php-ext-install -j$(nproc) \
         pdo_mysql \
@@ -42,6 +43,10 @@ RUN composer install --optimize-autoloader --no-dev --no-interaction
 RUN chown -R www-data:www-data /var/www/html/writable \
     && chmod -R 775 /var/www/html/writable
 
+# Copy and set entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
@@ -58,5 +63,5 @@ RUN echo '<Directory /var/www/html/public>\n\
 # Expose port 80
 EXPOSE 80
 
-# Start Apache server
-CMD ["apache2-foreground"]
+# Use custom entrypoint
+ENTRYPOINT ["docker-entrypoint.sh"]
