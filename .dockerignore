@@ -1,0 +1,38 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+LICENSE
+*.md
+
+# Tests
+tests/
+phpunit.xml.dist
+
+# Writable directories (will be created at runtime)
+writable/cache/*
+writable/logs/*
+writable/session/*
+writable/uploads/*
+writable/debugbar/*
+
+# Node modules if any
+node_modules/
+npm-debug.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (will be set in Railway)
+.env.example
