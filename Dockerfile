@@ -43,6 +43,10 @@ RUN composer install --optimize-autoloader --no-dev --no-interaction
 RUN chown -R www-data:www-data /var/www/html/writable \
     && chmod -R 775 /var/www/html/writable
 
+# Disable conflicting MPM modules and enable only one
+RUN a2dismod mpm_prefork mpm_worker mpm_event 2>/dev/null || true
+RUN a2enmod mpm_prefork
+
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
@@ -58,6 +62,13 @@ RUN echo '<Directory /var/www/html/public>\n\
 
 # Expose port
 EXPOSE 80
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Use entrypoint script
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Start Apache
 CMD ["apache2-foreground"]
