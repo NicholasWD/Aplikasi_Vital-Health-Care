@@ -4,12 +4,18 @@ set -e
 # Use PORT from Railway or default to 80
 export APACHE_PORT=${PORT:-80}
 
-# Update Apache ports configuration only if not already configured
-if ! grep -q "Listen ${APACHE_PORT}" /etc/apache2/ports.conf 2>/dev/null; then
-  echo "Configuring Apache to listen on port ${APACHE_PORT}..."
-  echo "Listen ${APACHE_PORT}" > /etc/apache2/ports.conf
-  sed -i "s/<VirtualHost \*:[0-9]\+>/<VirtualHost *:${APACHE_PORT}>/" /etc/apache2/sites-available/000-default.conf
-fi
+# Ensure only one MPM is enabled
+echo "Configuring Apache MPM modules..."
+a2dismod mpm_worker mpm_event 2>/dev/null || true
+a2enmod mpm_prefork 2>/dev/null || true
+
+# Remove existing Listen directives and add the correct one
+echo "Setting Apache to listen on port ${APACHE_PORT}..."
+sed -i '/^Listen /d' /etc/apache2/ports.conf
+echo "Listen ${APACHE_PORT}" >> /etc/apache2/ports.conf
+
+# Update VirtualHost to use correct port
+sed -i "s/<VirtualHost \*:[0-9]\+>/<VirtualHost *:${APACHE_PORT}>/" /etc/apache2/sites-available/000-default.conf
 
 echo "Starting Apache on port ${APACHE_PORT}..."
 
