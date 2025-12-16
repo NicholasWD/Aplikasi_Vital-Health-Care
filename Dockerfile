@@ -50,6 +50,9 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
+# Fix Apache MPM issue - disable mpm_event and enable mpm_prefork
+RUN a2dismod mpm_event && a2enmod mpm_prefork
+
 # Update Apache configuration to point to public directory
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
@@ -60,11 +63,7 @@ RUN echo '<Directory /var/www/html/public>\n\
     Require all granted\n\
 </Directory>' >> /etc/apache2/sites-available/000-default.conf
 
-# Configure Apache to listen on PORT env variable (Railway dynamic port)
-RUN echo 'Listen ${PORT:-80}' > /etc/apache2/ports.conf && \
-    sed -i 's/<VirtualHost \*:80>/<VirtualHost *:${PORT:-80}>/' /etc/apache2/sites-available/000-default.conf
-
-# Expose port (Railway will override this)
+# Expose port (Railway will override this with dynamic PORT)
 EXPOSE 80
 
 # Use custom entrypoint

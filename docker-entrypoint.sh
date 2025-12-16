@@ -4,9 +4,12 @@ set -e
 # Use PORT from Railway or default to 80
 export APACHE_PORT=${PORT:-80}
 
-# Update Apache ports configuration
-echo "Listen ${APACHE_PORT}" > /etc/apache2/ports.conf
-sed -i "s/<VirtualHost \*:[0-9]\+>/<VirtualHost *:${APACHE_PORT}>/" /etc/apache2/sites-available/000-default.conf
+# Update Apache ports configuration only if not already configured
+if ! grep -q "Listen ${APACHE_PORT}" /etc/apache2/ports.conf 2>/dev/null; then
+  echo "Configuring Apache to listen on port ${APACHE_PORT}..."
+  echo "Listen ${APACHE_PORT}" > /etc/apache2/ports.conf
+  sed -i "s/<VirtualHost \*:[0-9]\+>/<VirtualHost *:${APACHE_PORT}>/" /etc/apache2/sites-available/000-default.conf
+fi
 
 echo "Starting Apache on port ${APACHE_PORT}..."
 
