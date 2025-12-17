@@ -2,20 +2,6 @@
 Options -Indexes
 
 # ----------------------------------------------------------------------
-# CORS Headers
-# ----------------------------------------------------------------------
-<IfModule mod_headers.c>
-    Header always set Access-Control-Allow-Origin "*"
-    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS, PATCH"
-    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
-    
-    # Handle OPTIONS preflight request
-    RewriteEngine On
-    RewriteCond %{REQUEST_METHOD} OPTIONS
-    RewriteRule ^(.*)$ $1 [R=200,L]
-</IfModule>
-
-# ----------------------------------------------------------------------
 # Rewrite engine
 # ----------------------------------------------------------------------
 
@@ -24,6 +10,10 @@ Options -Indexes
 <IfModule mod_rewrite.c>
 	Options +FollowSymlinks
 	RewriteEngine On
+
+	# Handle CORS preflight OPTIONS request
+	RewriteCond %{REQUEST_METHOD} OPTIONS
+	RewriteRule .* - [R=200,L]
 
 	# If you installed CodeIgniter in a subfolder, you will need to
 	# change the following line to match the subfolder you need.
@@ -54,6 +44,16 @@ Options -Indexes
 	# Ensure Authorization header is passed along
 	RewriteCond %{HTTP:Authorization} .
 	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+
+# ----------------------------------------------------------------------
+# CORS Headers
+# ----------------------------------------------------------------------
+<IfModule mod_headers.c>
+	Header always set Access-Control-Allow-Origin "*"
+	Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+	Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept"
+	Header always set Access-Control-Max-Age "3600"
 </IfModule>
 
 <IfModule !mod_rewrite.c>
