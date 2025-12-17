@@ -7,6 +7,15 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
+// Auth Page Routes
+$routes->get('auth/login', static function() {
+    return view('auth/login');
+});
+
+$routes->get('auth/register', static function() {
+    return view('auth/register');
+});
+
 // API Routes
 $routes->group('api', ['namespace' => 'App\Controllers\Api'], function($routes) {
     
