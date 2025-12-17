@@ -26,6 +26,18 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function($routes) 
     $routes->post('auth/logout', 'AuthController::logout', ['filter' => 'auth']);
     $routes->get('auth/profile', 'AuthController::profile', ['filter' => 'auth']);
     
+    // Vital Category Routes (Protected)
+    $routes->group('vital-categories', ['filter' => 'auth'], function($routes) {
+        $routes->options('/', function() { return ''; }); // Preflight
+        $routes->options('(:num)', function() { return ''; }); // Preflight
+        
+        $routes->get('/', 'VitalCategoryController::index');
+        $routes->get('(:num)', 'VitalCategoryController::show/$1');
+        $routes->post('/', 'VitalCategoryController::create');
+        $routes->put('(:num)', 'VitalCategoryController::update/$1');
+        $routes->delete('(:num)', 'VitalCategoryController::delete/$1');
+    });
+    
     // Vital Routes (Protected)
     $routes->group('vitals', ['filter' => 'auth'], function($routes) {
         $routes->get('categories', 'VitalController::getCategories');

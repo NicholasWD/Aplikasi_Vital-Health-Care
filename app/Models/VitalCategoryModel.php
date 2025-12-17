@@ -12,7 +12,7 @@ class VitalCategoryModel extends Model
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['name', 'unit'];
+    protected $allowedFields = ['name', 'unit', 'icon'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
