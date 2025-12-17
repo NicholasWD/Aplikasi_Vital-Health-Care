@@ -67,6 +67,9 @@ EXPOSE 80
 COPY docker-entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
+# Copy .env example and create .env generation in entrypoint
+COPY .env /var/www/html/.env.example
+
 # Use entrypoint script
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
