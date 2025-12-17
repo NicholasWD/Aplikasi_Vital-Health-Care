@@ -7,6 +7,11 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
+// Test Routes (Debug)
+$routes->get('test/db', 'Test::dbTest');
+$routes->get('test/users', 'Test::userTest');
+$routes->get('test/login', 'Test::loginTest');
+
 // Auth Page Routes
 $routes->get('auth/login', static function() {
     return view('auth/login');
