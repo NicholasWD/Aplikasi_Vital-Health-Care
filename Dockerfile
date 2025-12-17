@@ -43,8 +43,13 @@ RUN composer install --optimize-autoloader --no-dev --no-interaction
 RUN chown -R www-data:www-data /var/www/html/writable \
     && chmod -R 775 /var/www/html/writable
 
+<<<<<<< HEAD
 # Disable conflicting MPM modules - keep only mpm_prefork
 RUN a2dismod mpm_worker mpm_event 2>/dev/null || true
+=======
+# Disable conflicting MPM modules and enable only one
+RUN a2dismod mpm_prefork mpm_worker mpm_event 2>/dev/null || true
+>>>>>>> development
 RUN a2enmod mpm_prefork
 
 # Enable Apache mod_rewrite
@@ -66,6 +71,9 @@ EXPOSE 80
 # Copy entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Copy .env example and create .env generation in entrypoint
+COPY .env /var/www/html/.env.example
 
 # Use entrypoint script
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
