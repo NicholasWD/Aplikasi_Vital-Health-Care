@@ -11,6 +11,7 @@ $routes->get('/', 'Home::index');
 $routes->get('test/db', 'Test::dbTest');
 $routes->get('test/users', 'Test::userTest');
 $routes->get('test/login', 'Test::loginTest');
+$routes->get('test/categories', 'Test::categoriesTest');
 
 // API Routes
 $routes->group('api', ['namespace' => 'App\Controllers\Api'], function($routes) {

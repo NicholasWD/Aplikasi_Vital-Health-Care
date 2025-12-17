@@ -76,8 +76,7 @@ class VitalCategoryController extends BaseController
     {
         $rules = [
             'name' => 'required|min_length[3]|max_length[100]',
-            'unit' => 'required|max_length[50]',
-            'icon' => 'max_length[10]'
+            'unit' => 'required|max_length[50]'
         ];
 
         if (!$this->validate($rules)) {
@@ -92,7 +91,6 @@ class VitalCategoryController extends BaseController
             $data = [
                 'name' => $this->request->getJSON()->name,
                 'unit' => $this->request->getJSON()->unit,
-                'icon' => $this->request->getJSON()->icon ?? '📊',
             ];
 
             if ($this->categoryModel->insert($data)) {
@@ -123,8 +121,7 @@ class VitalCategoryController extends BaseController
     {
         $rules = [
             'name' => 'required|min_length[3]|max_length[100]',
-            'unit' => 'required|max_length[50]',
-            'icon' => 'max_length[10]'
+            'unit' => 'required|max_length[50]'
         ];
 
         if (!$this->validate($rules)) {
@@ -147,7 +144,6 @@ class VitalCategoryController extends BaseController
             $data = [
                 'name' => $this->request->getJSON()->name,
                 'unit' => $this->request->getJSON()->unit,
-                'icon' => $this->request->getJSON()->icon ?? '📊',
             ];
 
             if ($this->categoryModel->update($id, $data)) {

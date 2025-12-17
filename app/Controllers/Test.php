@@ -81,4 +81,41 @@ class Test extends BaseController
             ])->setStatusCode(500);
         }
     }
+
+    public function categoriesTest()
+    {
+        try {
+            $db = \Config\Database::connect();
+            
+            // Check if table exists
+            if (!$db->tableExists('vital_categories')) {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Table vital_categories does not exist'
+                ])->setStatusCode(500);
+            }
+            
+            // Check table structure
+            $fields = $db->getFieldData('vital_categories');
+            $fieldNames = array_map(fn($field) => $field->name, $fields);
+            
+            // Get all categories
+            $categories = $db->table('vital_categories')->get()->getResultArray();
+            
+            return $this->response->setJSON([
+                'status' => 'success',
+                'message' => 'Categories test successful',
+                'table_exists' => true,
+                'columns' => $fieldNames,
+                'total_categories' => count($categories),
+                'data' => $categories
+            ]);
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ])->setStatusCode(500);
+        }
+    }
 }
