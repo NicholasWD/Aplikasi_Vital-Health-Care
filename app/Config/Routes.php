@@ -12,6 +12,7 @@ $routes->get('test/db', 'Test::dbTest');
 $routes->get('test/users', 'Test::userTest');
 $routes->get('test/login', 'Test::loginTest');
 $routes->get('test/categories', 'Test::categoriesTest');
+$routes->get('test/vital-categories', 'Api\VitalCategoryController::index'); // Test tanpa auth
 
 // API Routes
 $routes->group('api', ['namespace' => 'App\Controllers\Api'], function($routes) {
@@ -28,16 +29,14 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function($routes) 
     $routes->get('auth/profile', 'AuthController::profile', ['filter' => 'auth']);
     
     // Vital Category Routes (Protected)
-    $routes->group('vital-categories', ['filter' => 'auth'], function($routes) {
-        $routes->options('/', function() { return ''; }); // Preflight
-        $routes->options('(:num)', function() { return ''; }); // Preflight
-        
-        $routes->get('/', 'VitalCategoryController::index');
-        $routes->get('(:num)', 'VitalCategoryController::show/$1');
-        $routes->post('/', 'VitalCategoryController::create');
-        $routes->put('(:num)', 'VitalCategoryController::update/$1');
-        $routes->delete('(:num)', 'VitalCategoryController::delete/$1');
-    });
+    $routes->options('vital-categories', function() { return ''; }); // Preflight
+    $routes->options('vital-categories/(:num)', function() { return ''; }); // Preflight
+    
+    $routes->get('vital-categories', 'VitalCategoryController::index', ['filter' => 'auth']);
+    $routes->get('vital-categories/(:num)', 'VitalCategoryController::show/$1', ['filter' => 'auth']);
+    $routes->post('vital-categories', 'VitalCategoryController::create', ['filter' => 'auth']);
+    $routes->put('vital-categories/(:num)', 'VitalCategoryController::update/$1', ['filter' => 'auth']);
+    $routes->delete('vital-categories/(:num)', 'VitalCategoryController::delete/$1', ['filter' => 'auth']);
     
     // Vital Routes (Protected)
     $routes->group('vitals', ['filter' => 'auth'], function($routes) {

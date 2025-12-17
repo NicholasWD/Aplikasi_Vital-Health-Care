@@ -22,18 +22,27 @@ class VitalCategoryController extends BaseController
     public function index()
     {
         try {
+            // Log untuk debugging
+            log_message('info', 'VitalCategoryController::index called');
+            
             $categories = $this->categoryModel->findAll();
+
+            log_message('info', 'Categories found: ' . count($categories));
 
             return $this->response->setJSON([
                 'status' => true,
                 'message' => 'Categories retrieved successfully',
-                'data' => $categories
+                'data' => $categories,
+                'total' => count($categories)
             ])->setStatusCode(ResponseInterface::HTTP_OK);
         } catch (\Exception $e) {
+            log_message('error', 'VitalCategoryController::index error: ' . $e->getMessage());
+            
             return $this->response->setJSON([
                 'status' => false,
                 'message' => 'Failed to retrieve categories',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => ENVIRONMENT === 'development' ? $e->getTraceAsString() : null
             ])->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
