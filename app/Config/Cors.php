@@ -47,7 +47,7 @@ class Cors extends BaseConfig
          * E.g.:
          *   - ['https://\w+\.example\.com']
          */
-        'allowedOriginsPatterns' => [],
+        'allowedOriginsPatterns' => ['.*'],
 
         /**
          * Weather to send the `Access-Control-Allow-Credentials` header.
