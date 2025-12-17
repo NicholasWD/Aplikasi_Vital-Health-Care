@@ -12,19 +12,15 @@ $routes->get('test/db', 'Test::dbTest');
 $routes->get('test/users', 'Test::userTest');
 $routes->get('test/login', 'Test::loginTest');
 
-// Auth Page Routes
-$routes->get('auth/login', static function() {
-    return view('auth/login');
-});
-
-$routes->get('auth/register', static function() {
-    return view('auth/register');
-});
-
 // API Routes
 $routes->group('api', ['namespace' => 'App\Controllers\Api'], function($routes) {
     
     // Auth Routes
+    $routes->options('auth/register', function() { return ''; }); // Preflight
+    $routes->options('auth/login', function() { return ''; }); // Preflight
+    $routes->options('auth/logout', function() { return ''; }); // Preflight
+    $routes->options('auth/profile', function() { return ''; }); // Preflight
+    
     $routes->post('auth/register', 'AuthController::register');
     $routes->post('auth/login', 'AuthController::login');
     $routes->post('auth/logout', 'AuthController::logout', ['filter' => 'auth']);

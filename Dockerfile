@@ -47,8 +47,8 @@ RUN chown -R www-data:www-data /var/www/html/writable \
 RUN a2dismod mpm_prefork mpm_worker mpm_event 2>/dev/null || true
 RUN a2enmod mpm_prefork
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
+# Enable Apache mod_rewrite and mod_headers
+RUN a2enmod rewrite headers
 
 # Update Apache configuration to point to public directory
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
